@@ -106,6 +106,8 @@ VITE_GEMINI_API_KEY=your_gemini_api_key
 VITE_MAIL_JS_SERVICE_ID=your_service_id
 VITE_MAIL_JS_TEMPLATE_ID=your_template_id
 VITE_MAIL_JS_KEY=your_emailjs_public_key
+VITE_RECAPTCHA_SITE_KEY=your_recaptcha_site_key
+
 ```
 
 **Note**: These are loaded by Vite and available as `import.meta.env.VITE_*`
@@ -196,6 +198,8 @@ Add these 4 secrets:
 - `MAIL_JS_SERVICE_ID` - EmailJS service ID
 - `MAIL_JS_TEMPLATE_ID` - EmailJS template ID
 - `MAIL_JS_KEY` - EmailJS public key
+- `VITE_RECAPTCHA_SITE_KEY` - Google reCAPTCHA v2 Site Key
+
 
 **Enable GitHub Pages**:
 1. Navigate to: `Settings > Pages`
