@@ -37,6 +37,7 @@ jobs:
           MAIL_JS_SERVICE_ID: ${{ secrets.MAIL_JS_SERVICE_ID }}
           MAIL_JS_TEMPLATE_ID: ${{ secrets.MAIL_JS_TEMPLATE_ID }}
           MAIL_JS_KEY: ${{ secrets.MAIL_JS_KEY }}
+          VITE_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_RECAPTCHA_SITE_KEY }}
 
       - name: Check build size
         run: |

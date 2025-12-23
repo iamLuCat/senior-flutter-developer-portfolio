@@ -22,7 +22,8 @@ export default defineConfig(({ mode }) => {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
       'process.env.MAIL_JS_SERVICE_ID': JSON.stringify(env.MAIL_JS_SERVICE_ID),
       'process.env.MAIL_JS_TEMPLATE_ID': JSON.stringify(env.MAIL_JS_TEMPLATE_ID),
-      'process.env.MAIL_JS_KEY': JSON.stringify(env.MAIL_JS_KEY)
+      'process.env.MAIL_JS_KEY': JSON.stringify(env.MAIL_JS_KEY),
+      'process.env.VITE_RECAPTCHA_SITE_KEY': JSON.stringify(env.VITE_RECAPTCHA_SITE_KEY),
     },
     resolve: {
       alias: {

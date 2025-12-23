@@ -1,12 +1,15 @@
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Reveal from '../components/Reveal';
 import { portfolioData } from '../data/portfolioData';
 import emailjs from '@emailjs/browser';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,6 +18,10 @@ const Contact: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
+    if (!captchaToken) {
+      alert("Please complete the reCAPTCHA verification.");
+      return;
+    }
 
     setStatus('sending');
 
@@ -38,6 +45,8 @@ const Contact: React.FC = () => {
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
+      setCaptchaToken(null);
+      recaptchaRef.current?.reset();
     } catch (error) {
       console.error("Error sending message via EmailJS:", error);
       setStatus('error');
@@ -75,7 +84,7 @@ const Contact: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
               {contactItems.map((item, i) => (
                 <Reveal key={i} delay={0.4 + (0.1 * i)}>
-                  <a 
+                  <a
                     href={item.href}
                     target={item.href.startsWith('http') ? "_blank" : "_self"}
                     rel={item.href.startsWith('http') ? "noopener noreferrer" : ""}
@@ -106,8 +115,8 @@ const Contact: React.FC = () => {
                     <p className="text-slate-500 mb-8 max-w-xs mx-auto">
                       Thank you for reaching out. I have received your message and will respond as soon as possible.
                     </p>
-                    
-                    <button 
+
+                    <button
                       onClick={() => setStatus('idle')}
                       className="h-12 px-8 rounded-xl bg-slate-100 text-slate-900 font-bold text-sm hover:bg-slate-200 transition-all"
                     >
@@ -120,8 +129,8 @@ const Contact: React.FC = () => {
                     <form className="space-y-6" onSubmit={handleSubmit}>
                       <div>
                         <label className="block text-sm font-bold text-slate-700 mb-2">Name</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           name="name"
                           required
                           value={formData.name}
@@ -133,8 +142,8 @@ const Contact: React.FC = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-bold text-slate-700 mb-2">Email</label>
-                        <input 
-                          type="email" 
+                        <input
+                          type="email"
                           name="email"
                           required
                           value={formData.email}
@@ -146,7 +155,7 @@ const Contact: React.FC = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-bold text-slate-700 mb-2">Message</label>
-                        <textarea 
+                        <textarea
                           rows={5}
                           name="message"
                           required
@@ -157,9 +166,18 @@ const Contact: React.FC = () => {
                           className="w-full rounded-xl border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-slate-300 resize-none disabled:opacity-50"
                         ></textarea>
                       </div>
-                      <button 
+
+                      <div className="flex justify-center">
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          sitekey={process.env.VITE_RECAPTCHA_SITE_KEY}
+                          onChange={(token) => setCaptchaToken(token)}
+                        />
+                      </div>
+
+                      <button
                         type="submit"
-                        disabled={status === 'sending'}
+                        disabled={status === 'sending' || !captchaToken}
                         className="w-full h-14 rounded-xl bg-primary text-white font-bold text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/25 hover:bg-blue-700 hover:shadow-xl transition-all active:scale-95 group disabled:bg-slate-400 disabled:shadow-none"
                       >
                         {status === 'sending' ? (
