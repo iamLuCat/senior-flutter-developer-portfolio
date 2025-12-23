@@ -170,7 +170,7 @@ const Contact: React.FC = () => {
                       <div className="flex justify-center">
                         <ReCAPTCHA
                           ref={recaptchaRef}
-                          sitekey={process.env.VITE_RECAPTCHA_SITE_KEY}
+                          sitekey={process.env.VITE_RECAPTCHA_SITE_KEY || "6LfRezQsAAAAAC3yY4xhDC6tRfTeBfacz_vFfRcR"}
                           onChange={(token) => setCaptchaToken(token)}
                         />
                       </div>
