@@ -1,0 +1,45 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate:
+    name: Validate PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type check
+        run: npm run type-check
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Build validation
+        run: npm run build
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MAIL_JS_SERVICE_ID: ${{ secrets.MAIL_JS_SERVICE_ID }}
+          MAIL_JS_TEMPLATE_ID: ${{ secrets.MAIL_JS_TEMPLATE_ID }}
+          MAIL_JS_KEY: ${{ secrets.MAIL_JS_KEY }}
+
+      - name: Check build size
+        run: |
+          echo "Build size analysis:"
+          du -sh dist/
+          du -sh dist/assets/
