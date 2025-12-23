@@ -40,7 +40,7 @@ jobs:
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') && !env.ACT
         with:
           name: dist
           path: dist/
